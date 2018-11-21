@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: default
 title: Hunspell en Emacs
 date: 2018-11-21 08:30
 categories: emacs markdown hunspell
