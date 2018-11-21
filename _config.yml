@@ -1,6 +1,17 @@
-theme: jekyll-theme-minimal
+# Site settings
 title: aberlanas Recursos
-description: Recursos TIC + IT
+tag_text: Recursos IT + TIC
+description: Recursos, refexiones e IT
+url: "http://aberlanas.github.io"
+baseurl: ""
+theme: good-clean-read
 twitter_username: aberlanastic
 github_username: aberlanas
 youtube_username: AngelBerlanas
+
+font-awesome-include: true # make this false if you don't need font-awesome
+
+# Build settings
+markdown: kramdown
+
+exclude: ["README.md"]
