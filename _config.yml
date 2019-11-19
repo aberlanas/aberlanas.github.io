@@ -1,8 +1,8 @@
-title: Mis usuarios y otros animales
-description: Recursos IT + TIC
+title: ABerlanas y Sistemas
+description: Sistemas y recursos
 show_downloads: false
 url: "http://aberlanas.github.io"
 twitter_username: aberlanastic
 github_username: aberlanas
 youtube_username: AngelBerlanas
-theme: jekyll-theme-modernist
+theme: jekyll-theme-hacker
