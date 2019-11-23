@@ -1,0 +1,23 @@
+---
+layout: default
+title: Metaberlanas, un Blog
+---
+<div class="blurb">
+	<h1>Metaberlanas, un blog.</h1>
+
+
+	<h2>{{ site.posts.last.title }}</h2>
+	<div class="post">
+	{{ site.posts.last.content }}
+	</div>
+
+
+	<h2> Todas las entradas </h2>
+	<ul class="posts">
+
+	  {% for post in site.posts %}
+	    <li><span>{{ post.date | date_to_string }}</span> » <a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></li>
+	  {% endfor %}
+	</ul>
+
+</div><!-- /.blurb -->

@@ -1,0 +1,209 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Gen Tools - A simple Gen Merger</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+      crossorigin="anonymous"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+      integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+      crossorigin="anonymous"
+    />
+
+    <link rel="stylesheet" href="estilos.css" />
+  </head>
+
+  <body>
+    <div class="titleGen">
+      <h2>GenTools - GenMerger</h2>
+      <p>A simple tool to combine several sequences.</p>
+      <p>
+        You can see the Code of this page on
+        <a href="https://github.com/aberlanas/gen-tools"
+          >GitHub too! <i class="fab fa-github-alt"></i
+        ></a>
+      </p>
+    </div>
+
+    <div class="options">
+      <label class="optionItem"><h4>Options</h4></label>
+      <label class="optionItem">
+        <input
+          type="checkbox"
+          name="showGensInFiles"
+          value="showGensInFiles"
+        />Show Genes in Files
+      </label>
+      <label class="optionItem">
+        <input
+          type="checkbox"
+          name="showFinalBuild"
+          value="showFinalBuild"
+        />Show Final Build
+      </label>
+      <button
+        type="button"
+        class=""
+        onClick="window.location.href=window.location.href"
+      >
+        Reload Page ...
+      </button>
+    </div>
+
+    <hr />
+
+    <div class="container">
+      <table class="table table-bordered">
+        <thead>
+          <th scope="col">File</th>
+          <th scope="col">Path</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              File 1
+            </td>
+            <td>
+              <input type="file" id="file_1" name="file_1" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              File 2
+            </td>
+            <td>
+              <input type="file" id="file_2" name="file_2" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              File 3
+            </td>
+
+            <td>
+              <input type="file" id="file_3" name="file_3" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              File 4
+            </td>
+            <td>
+              <input type="file" id="file_4" name="file_4" />
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              File 5
+            </td>
+            <td>
+              <input type="file" id="file_5" name="file_5" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              File 6
+            </td>
+            <td>
+              <input type="file" id="file_6" name="file_6" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div id="idTableResult"></div>
+
+      <div id="messages"></div>
+
+      <button class="btn btn-primary" onclick="fusiona()">Spin To Win!</button>
+    </div>
+
+    <div class="container divFusionResult">
+      <h2>Fusion Result</h2>
+
+        <div id="ocultado_1" style="display:none">
+        <a id="result_1_title" class="btn btn-primary" data-toggle="collapse" href="#collapse_1" aria-expanded="false" aria-controls="collapse_1"></a>
+        </div>
+
+        <div class="collapse" id="collapse_1">
+          <div class="card card-body">
+            <ul id="result_1_keys"></ul>
+          </div>
+        </div>
+
+        <div id="ocultado_2" style="display:none">
+                <a id="result_2_title" class="btn btn-primary" data-toggle="collapse" href="#collapse_2" aria-expanded="false" aria-controls="collapse_2"></a>
+                </div>
+        
+                <div class="collapse" id="collapse_2">
+                  <div class="card card-body">
+                    <ul id="result_2_keys"></ul>
+                  </div>
+        </div>
+
+        <div id="ocultado_3" style="display:none">
+                <a id="result_3_title" class="btn btn-primary" data-toggle="collapse" href="#collapse_3" aria-expanded="false" aria-controls="collapse_3"></a>
+                </div>
+        
+                <div class="collapse" id="collapse_3">
+                  <div class="card card-body">
+                    <ul id="result_3_keys"></ul>
+                  </div>
+        </div>
+
+        <div id="ocultado_4" style="display:none">
+                <a id="result_4_title" class="btn btn-primary" data-toggle="collapse" href="#collapse_4" aria-expanded="false" aria-controls="collapse_4"></a>
+                </div>
+        
+                <div class="collapse" id="collapse_4">
+                  <div class="card card-body">
+                    <ul id="result_4_keys"></ul>
+                  </div>
+        </div>
+
+        <div id="ocultado_5" style="display:none">
+                <a id="result_5_title" class="btn btn-primary" data-toggle="collapse" href="#collapse_5" aria-expanded="false" aria-controls="collapse_5"></a>
+                </div>
+        
+                <div class="collapse" id="collapse_5">
+                  <div class="card card-body">
+                    <ul id="result_5_keys"></ul>
+                  </div>
+        </div>
+
+        <div id="ocultado_6" style="display:none">
+                <a id="result_6_title" class="btn btn-primary" data-toggle="collapse" href="#collapse_6" aria-expanded="false" aria-controls="collapse_6"></a>
+                </div>
+        
+                <div class="collapse" id="collapse_6">
+                  <div class="card card-body">
+                    <ul id="result_6_keys"></ul>
+                  </div>
+        </div>
+
+
+    </div>
+
+    <div class="container divFinalBuild">
+      <h2>Final Build</h2>
+
+      <div id="mergedResult" class="result"></div>
+    </div>
+
+    <!-- JavaScript -->
+    <script type="text/javascript" src="js/gentools.js"></script>
+    <script
+      type="text/javascript"
+      src="dist/bootstrap-native-v4.min.js"
+    ></script>
+  </body>
+</html>

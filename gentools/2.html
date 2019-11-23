@@ -1,0 +1,673 @@
+<html>
+<head>
+   <meta charset="UTF-8">
+    <title>Gen Tools - A simple Gen Merger </title>
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+     <!-- Latest compiled and minified CSS -->
+
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+     <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link rel="stylesheet" href="estilos.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h2 class="display-4"> GenTools - GenMerger </h2>
+            <p class="lead"> A simple tool to combinate several genomic sequences.</p>
+        </div>
+    </div>
+
+    <!--
+    <input type="file" id="filesx" name="filesx[]"
+        onchange="readmultifiles(this.files)" multiple=""/>
+    -->
+    <div class="container">
+        <button type="button" class="btn btn-success" onClick="window.location.href=window.location.href">Recargar ... </button>
+    <table class="table table-bordered">
+    <thead>
+        <th scope="col"> Fichero </th>
+        <th scope="col"> Ruta </th>
+    </thead>
+    <tbody>
+        <tr>
+            <th>
+                Fichero 1
+            </th>
+            <th>
+                <input type="file"id="file_1" name="file_1">
+                <div id = "drop_zone" ondrop= "dropHandler(event);" ondragover= "dragOverHandler(event);"><p>Arrastra y suelta uno o más archivos a esta zona ...</p></div>
+            </th>
+                
+        </tr>
+        <tr>
+            <th>
+                Fichero 2
+            </th>
+            <th>
+                <input type="file" id="file_2" name="file_2"></th>
+        </tr>
+        <tr>
+            <th>
+                Fichero 3
+            </th>
+            <th>
+                <input type="file" id="file_3" name="file_3"></th>
+        </tr>
+        <tr>
+            <th>
+                Fichero 4
+            </th>
+            <th>
+                <input type="file" id="file_4" name="file_4"></th>
+        </tr>
+
+        <tr>
+            <th>
+                Fichero 5
+            </th>
+            <th>
+                <input type="file" id="file_5" name="file_5"></th>
+        </tr>
+         <tr>
+            <th>
+                Fichero 6
+            </th>
+            <th>
+                <input type="file" id="file_6" name="file_6"></th>
+        </tr>
+        
+
+    </tbody>
+    </table>
+
+    <div id="messages">
+    </div>
+
+    <button class="btn btn-primary" onclick="fusiona()">Spin To Win!</button>
+    </div>
+
+    <div class="container">
+    <h2>Resultado de la fusion</h2>
+
+    <div id="result">
+
+        <!-- Divs para los resultados -->
+        <div id="result_1" class="result">
+            <div id="result_1_title" class=""></div>
+            <ul id="result_1_keys"></ul>
+        </div>
+        <div id="result_2" class="result">
+            <div id="result_2_title" class=""></div>
+            <ul id="result_2_keys"></ul>
+        </div>
+        <div id="result_3" class="result">
+            <div id="result_3_title" class=""></div>
+            <ul id="result_3_keys"></ul>
+        </div>
+        <div id="result_4" class="result">
+            <div id="result_4_title" class=""></div>
+            <ul id="result_4_keys"></ul>
+        </div>
+        <div id="result_5" class="result">
+            <div id="result_5_title" class=""></div>
+            <ul id="result_5_keys"></ul>
+        </div>
+        <!--AÑADIDO aqui faltaba el div 6 de resultados XD-->
+        <div id="result_6" class="result">
+            <div id="result_6_title" class=""></div>
+            <ul id="result_6_keys"></ul>
+        </div>
+
+
+    </div>
+
+    </div>
+    <div class="container">
+
+        <h2> Final Build </h2>
+
+        <div id="mergedResult" class="result"></div>
+
+
+    </div>
+
+    <script>
+
+        //Excepción para cuando la carga de archivos sea de distinto formato del establecido.
+
+
+        window.onload = function() {
+            if (typeof window.FileReader !== 'function') {
+                alert("The file API isn't supported on this browser yet.");
+            }
+        }
+
+        // Funciones de utilidad
+
+        function cleanString(s){
+            s = s.replace(/\r/g, '');
+            return s;
+        }
+        function dragOverHandler(ev) {
+            console.log('File(s) in drop zone');
+
+            ev.preventDefault();
+        }
+        function removeDragData(ev){
+            console.log('Borrando drag data');
+
+            if(ev.dataTransfer.items){
+                ev.dataTransfer.items.clear();
+            } else {
+                ev.dataTransfer.clearData();
+            }
+        }
+
+        function dropHandler(ev){
+        
+            console.log('File(s) dropped');
+
+            // Prevenir el comportamiento por defecto (Evitar que se abra el archivo)
+            ev.preventDefault();
+
+            if(ev.dataTransfer.items){
+                // Use la interfaz DataTransferItemList para acceder a los archivos
+                for (var i = 0 ; i < ev.dataTransfer.items.length;i++){
+                    // Si los elementos soltados no son archivos, retirarlos.
+                    if(ev.dataTransfer.items[i].kind === 'file'){
+                        var file = ev.dataTransfer.items[i].getAsFile();
+                        console.log('... file[' + i + '].name = ' + file.name);
+                        readFile1(file);
+                    }
+                }               
+                } else {
+                    //Usar dataTrasfer para acceder a los archivos.
+                    for (var i = 0; i < ev.dataTransfer.files.leght;i++){
+                        console.log('... file[' + i + '].name = ' + ev.dataTransfer.files[i].name); 
+                    }
+                }
+                // Pase el evento a removeDragData para la limpieza
+                removeDragData(ev);
+            }
+        
+        function limpiarResultados() {
+            document.getElementById("result_1_title").innerHTML="";
+            document.getElementById("result_1_keys").innerHTML="";
+            document.getElementById("result_2_title").innerHTML="";
+            document.getElementById("result_2_keys").innerHTML="";
+            document.getElementById("result_3_title").innerHTML="";
+            document.getElementById("result_3_keys").innerHTML="";
+            document.getElementById("result_4_title").innerHTML="";
+            document.getElementById("result_4_keys").innerHTML="";
+            document.getElementById("result_5_title").innerHTML="";
+            document.getElementById("result_5_keys").innerHTML="";
+            document.getElementById("result_6_title").innerHTML="";
+            document.getElementById("result_6_keys").innerHTML="";
+        }
+
+        function llamarGaren() {
+            $("#messages").append("<div class=\"imagen-garen\"id=\"garen\"><img src=\"img/spinGaren.gif\"></div>");
+            setTimeout("eliminarDiv(document.getElementById(\"garen\"))",2000);
+        }
+        function eliminarDiv(nameDiv) {
+           nameDiv.parentNode.removeChild(nameDiv);      
+        }
+
+
+        function limpiarInputFile(){
+        
+            var input1 = $('#' + "file_1");
+            input1.val("");
+            var input2 = $('#' + "file_2");
+            input2.val("");
+            var input3 = $('#' + "file_3");
+            input3.val("");
+            var input4 = $('#' + "file_4");
+            input4.val("");
+            var input5 = $('#' + "file_5");
+            input5.val("");
+            var input6 = $('#' + "file_6");
+            input6.val("");
+
+            file_1 = {};
+            file_2 = {};
+            file_3 = {};
+            file_4 = {};
+            file_5 = {};
+            file_6 = {};
+        }
+
+        var resultado= {};
+
+        // TODO
+        // Sinceramente esto es mejorable, pero me gustaría tener
+        // una versión pronto de esto
+
+        var file_1 = {};
+        var file_2 = {};
+        var file_3 = {};
+        var file_4 = {};
+        var file_5 = {};
+        var file_6 = {};
+
+        function readFile1(evt){
+
+            console.log(evt);
+            //falta excepcion dependiendo de el tipo de archivo o file le pasemos si le pasamos evt desde drog convertirlo en evt.
+            //var f = evt.target.files[0];
+            var f = evt;
+            //AÑADIDO
+            file_1 = {};
+
+            if (f) {
+                var r = new FileReader();
+                r.onload = function(e) {
+                    var contents = e.target.result;
+                    contents = cleanString(contents);
+                    // TODO
+                    // Seguimos aqui luego y hacemos split con \n : txt_slp = array con contenido.
+                    var txt_spl = contents.split("\n");
+                    for (var i = 0 ; i < txt_spl.length; i++){
+                        if (txt_spl[i].startsWith(">")){
+                            if (typeof(file_1[txt_spl[i]]) == "undefined"){
+                                file_1[txt_spl[i]]="";
+                            }
+
+                                file_1[txt_spl[i]] += txt_spl[i+1];
+                        }
+                    }
+
+
+                    // Custom data
+
+
+                    //vaciamos elemento title para evitar duplicado de titulo
+                    // AÑADIDO
+                    document.getElementById("result_1_title").innerHTML="";
+                    $("#result_1_title").append("<h3> Fichero 1 -> Gen :</h3>");
+
+                    //AÑADIDO
+                    document.getElementById("result_1_keys").innerHTML="";
+                    Object.keys(file_1).forEach(function(key){
+                            console.log(key);
+                            $("#result_1_keys").append("<li>"+key+"</li>");
+                    });
+
+
+
+                } // FIN del Onload
+
+                r.readAsText(f);
+            }
+        }
+
+        document.getElementById('file_1').addEventListener('change', readFile1, false);
+
+
+
+        function readFile2(evt){
+
+            var f = evt.target.files[0];
+            //AÑADIDO
+            file_2 = {};
+
+            if (f) {
+                var r = new FileReader();
+                r.onload = function(e) {
+
+                    var contents = e.target.result;
+                    contents = cleanString(contents);
+                    // TODO
+                    // Seguimos aqui luego
+                    var txt_spl = contents.split("\n");
+                    for (var i = 0 ; i < txt_spl.length; i++){
+                        if (txt_spl[i].startsWith(">")){
+                            if (typeof(file_2[txt_spl[i]]) == "undefined"){
+                                file_2[txt_spl[i]]="";
+                            }
+
+                                file_2[txt_spl[i]] += txt_spl[i+1];
+                        }
+                    }
+
+                // Custom data
+                //AÑADIDO
+                    document.getElementById("result_2_title").innerHTML="";
+                    $("#result_2_title").append("<h3> Fichero 2 -> Gen :</h3>");
+
+                    document.getElementById("result_2_keys").innerHTML="";
+                    Object.keys(file_2).forEach(function(key){
+                            console.log(key);
+                            $("#result_2_keys").append("<li>"+key+"</li>");
+                    });
+
+    //document.getElementById('result_2').innerHTML=JSON.stringify(file_2);
+
+                } // FIN del Onload
+
+                r.readAsText(f);
+            }
+        }
+
+        document.getElementById('file_2').addEventListener('change', readFile2, false);
+
+
+        function readFile3(evt){
+
+            var f = evt.target.files[0];
+            //AÑADIDO
+            file_3 = {};
+
+            if (f) {
+                var r = new FileReader();
+                r.onload = function(e) {
+                    var contents = e.target.result;
+                    contents = cleanString(contents);
+                    // TODO
+                    // Seguimos aqui luego
+                    var txt_spl = contents.split("\n");
+                    for (var i = 0 ; i < txt_spl.length; i++){
+                        if (txt_spl[i].startsWith(">")){
+                            if (typeof(file_3[txt_spl[i]]) == "undefined"){
+                                file_3[txt_spl[i]]="";
+                            }
+
+                                file_3[txt_spl[i]] += txt_spl[i+1];
+                        }
+                    }
+                    //AÑADIDO
+                    document.getElementById("result_3_title").innerHTML="";
+                    $("#result_3_title").append("<h3> Fichero 3 -> Gen :</h3>");
+
+                    document.getElementById("result_3_keys").innerHTML="";
+                    Object.keys(file_3).forEach(function(key){
+                            console.log(key);
+                            $("#result_3_keys").append("<li>"+key+"</li>");
+                    });
+
+
+                } // FIN del Onload
+
+                r.readAsText(f);
+            }
+        }
+
+        //AQUI ARREGLO DE COPI-PASTE XD
+        document.getElementById('file_3').addEventListener('change', readFile3, false);
+
+
+        function readFile4(evt){
+
+            var f = evt.target.files[0];
+            //AÑADIDO
+            file_4 = {};
+
+            if (f) {
+                var r = new FileReader();
+                r.onload = function(e) {
+                    var contents = e.target.result;
+                    contents = cleanString(contents);
+                    // TODO
+                    // Seguimos aqui luego
+                    var txt_spl = contents.split("\n");
+                    for (var i = 0 ; i < txt_spl.length; i++){
+                        if (txt_spl[i].startsWith(">")){
+                            if (typeof(file_4[txt_spl[i]]) == "undefined"){
+                                file_4[txt_spl[i]]="";
+                            }
+
+                                file_4[txt_spl[i]] += txt_spl[i+1];
+                        }
+                    }
+                    document.getElementById("result_4_title").innerHTML="";
+                    $("#result_4_title").append("<h3> Fichero 4 -> Gen :</h3>");
+
+                    document.getElementById("result_4_keys").innerHTML="";
+                    Object.keys(file_4).forEach(function(key){
+                            console.log(key);
+                            $("#result_4_keys").append("<li>"+key+"</li>");
+                    });
+
+
+                } // FIN del Onload
+
+                r.readAsText(f);
+            }
+        }
+
+        document.getElementById('file_4').addEventListener('change', readFile4, false);
+
+
+        function readFile5(evt){
+
+            var f = evt.target.files[0];
+            //AÑADIDO
+            file_5 = {};
+
+            if (f) {
+                var r = new FileReader();
+                r.onload = function(e) {
+                    var contents = e.target.result;
+                    contents = cleanString(contents);
+                    // TODO
+                    // Seguimos aqui luego
+                    var txt_spl = contents.split("\n");
+                    for (var i = 0 ; i < txt_spl.length; i++){
+                        if (txt_spl[i].startsWith(">")){
+                            if (typeof(file_5[txt_spl[i]]) == "undefined"){
+                                file_5[txt_spl[i]]="";
+                            }
+
+                                file_5[txt_spl[i]] += txt_spl[i+1];
+                        }
+                    }
+                    //AÑADIDO
+                    document.getElementById("result_5_title").innerHTML="";
+                     $("#result_5_title").append("<h3> Fichero 5 -> Gen :</h3>");
+
+                    document.getElementById("result_5_keys").innerHTML="";
+                    Object.keys(file_5).forEach(function(key){
+                            console.log(key);
+                            $("#result_5_keys").append("<li>"+key+"</li>");
+                    });
+
+
+
+                } // FIN del Onload
+
+                r.readAsText(f);
+            }
+        }
+
+        document.getElementById('file_5').addEventListener('change', readFile5, false);
+
+        function readFile6(evt){
+
+            var f = evt.target.files[0];
+            //AÑADIDO
+            file_6 = {};
+
+            if (f) {
+                var r = new FileReader();
+                r.onload = function(e) {
+                    var contents = e.target.result;
+                    contents = cleanString(contents);
+                    // TODO
+                    // Seguimos aqui luego
+                    var txt_spl = contents.split("\n");
+                    for (var i = 0 ; i < txt_spl.length; i++){
+                        if (txt_spl[i].startsWith(">")){
+                            if (typeof(file_6[txt_spl[i]]) == "undefined"){
+                                file_6[txt_spl[i]]="";
+                            }
+
+                                file_6[txt_spl[i]] += txt_spl[i+1];
+                        }
+                    }
+                    //AÑADIDO
+                    document.getElementById("result_6_title").innerHTML="";
+                    $("#result_6_title").append("<h3> Fichero 6 -> Gen :</h3>");
+
+                    document.getElementById("result_6_keys").innerHTML="";
+                    Object.keys(file_6).forEach(function(key){
+                            console.log(key);
+                            $("#result_6_keys").append("<li>"+key+"</li>");
+                    });
+
+
+                } // FIN del Onload
+
+                r.readAsText(f);
+            }
+        }
+
+        document.getElementById('file_6').addEventListener('change', readFile6, false);
+
+
+
+
+        function readmultifiles(files) {
+            var ul = document.querySelector("#bag>ul");
+            while (ul.hasChildNodes()) {
+                ul.removeChild(ul.firstChild);
+            }
+            // Read first file
+            setup_reader(files, 0);
+            console.log(resultado);
+        }
+
+    // Don't define functions in functions in functions, when possible.
+
+        function setup_reader(files, i) {
+            var file = files[i];
+            var name = file.name;
+
+            var reader = new FileReader();
+            reader.onload = function(e){
+                readerLoaded(e, files, i, name);
+            };
+            reader.readAsText(file);
+            // After reading, read the next file.
+        }
+
+        function readerLoaded(e, files, i, name) {
+            // get file content
+            var txt = e.target.result;
+
+            var txtspliteado = txt.split("\n");
+
+            for (var i = 0;i< txtspliteado.length; i++){
+
+              console.log(txtspliteado[i]);
+              if (txtspliteado[i].startsWith(">")){
+                  if ( typeof(resultado[txtspliteado[i]]) == "undefined"){
+                    resultado[txtspliteado[i]]="";
+                  }
+                   resultado[txtspliteado[i]] += txtspliteado[i+1];
+              }
+            }
+            var li = document.createElement("li");
+            li.innerHTML = name;
+            var ul = document.querySelector("#bag>ul");
+            ul.appendChild(li);
+
+            // If there's a file left to load
+            if (i < files.length - 1) {
+                // Load the next file
+                setup_reader(files, i+1);
+            }
+        }
+
+        function download(filename, text) {
+            var element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+            element.setAttribute('download', filename);
+
+            element.style.display = 'none';
+            document.body.appendChild(element);
+
+            element.click();
+
+            document.body.removeChild(element);
+        }
+
+
+
+        function getFiles(){
+            var files = [];
+            if ( JSON.stringify(file_1) != "{}") files.push(file_1);
+            if ( JSON.stringify(file_2) != "{}") files.push(file_2);
+            if ( JSON.stringify(file_3) != "{}") files.push(file_3);
+            if ( JSON.stringify(file_4) != "{}") files.push(file_4);
+            if ( JSON.stringify(file_5) != "{}") files.push(file_5);
+            if ( JSON.stringify(file_6) != "{}") files.push(file_6);
+            return files;
+        }
+
+
+        var mergedResult = {};
+
+        function fusiona(){
+            
+            mergedResult = {};
+            var files = getFiles();
+            var listOfIndex = [];
+            var textoFinal = "";
+            
+            //ELIMINACION DE DIV ERROR
+            if(document.getElementById('alert-error') != null ){
+                eliminarDiv(document.getElementById('alert-error'));
+            }
+            
+            //PARA COMPROBAR QUE NO HAY ARCHIVOS SELECCIONADOS.
+            if(files.length == 0){
+                alert("No hay archivos");
+                limpiarResultados();
+            }
+                for (var i = 0; i < files.length ; i++){
+
+        // RECORREMOS OBJETOS.
+        for (var index in files[i]){
+            if (mergedResult[index] == "undefined"){
+            mergedResult[index] = "";
+        }
+            mergedResult[index] += files[i][index];
+
+            if ( i == 0){
+            listOfIndex.push(index);
+            }else{
+                if (! listOfIndex.includes(index)){
+                var msg = "La CLAVE "+ index +" no esta en el primer fichero";
+
+            $("#messages").append("<div class=\"alert alert-warning\" role=\"alert\" id=\"alert-error\">"+msg+"</div>");
+            textoFinal+=msg + "\r\n";
+        }
+    }
+   }
+}
+// Recorremos ahora para crear el fichero txt
+    for (var index in mergedResult){
+        textoFinal+=index;
+        textoFinal+="\r\n";
+        textoFinal+=mergedResult[index];
+        textoFinal+="\r\n";
+    }
+        textoFinal = textoFinal.replace(/undefined/g,"");
+        download("garen.txt",textoFinal);
+        document.getElementById('mergedResult').innerHTML = JSON.stringify(mergedResult);
+        llamarGaren();
+        limpiarInputFile();
+            }
+    </script>
+
+
+</body>
+</html>
