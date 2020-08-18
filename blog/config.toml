@@ -1,4 +1,0 @@
-baseURL = "http://aberlanas.ovh/"
-languageCode = "es-ES"
-title = "Life, Emacs and Other Stuff"
-theme = "hugo-theme-console"
