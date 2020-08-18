@@ -1,3 +1,6 @@
 [submodule "blog/themes/hugo-theme-console"]
 	path = blog/themes/hugo-theme-console
 	url = https://github.com/mrmierzejewski/hugo-theme-console.git
+[submodule "blog/hugo-theme-console"]
+	path = blog/hugo-theme-console
+	url = https://github.com/mrmierzejewski/hugo-theme-console.git
